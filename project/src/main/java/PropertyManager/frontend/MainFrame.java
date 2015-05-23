@@ -10,6 +10,7 @@ import PropertyManager.common.DataLabelFormater;
 import PropertyManager.common.SpringConfig;
 import PropertyManager.manager.*;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -197,6 +198,91 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (InterruptedException ex) {
                 log.error("Method doInBackground has been interrupted in FindAllPropertiesByTownWorker " + ex.getCause());
                 throw new RuntimeException("Operation interrupted in FindAllPropertiesByTownWorker");
+            }
+        }
+    }
+    
+    // DELETE
+    
+    private int[] convert(List<Integer> o) {
+        int[] result = new int[o.size()];
+        for (int i = 0; i < o.size(); i++) {
+            result[i] = o.get(i);
+        }
+        return result;
+    }
+    
+    private class DeleteOwnerWorker extends SwingWorker<int[], Void> {
+
+        @Override
+        protected int[] doInBackground() {
+            int[] selectedRows = JTableOwners.getSelectedRows();
+            List<Integer> toDeleteRows = new ArrayList<>();
+            if (selectedRows.length >= 0) {
+                for (int selectedRow : selectedRows) {
+                    Owner owner = ownerModel.getOwner(selectedRow);
+                    try {
+                        ownerManager.deleteOwner(owner);
+                        toDeleteRows.add(selectedRow);
+                    }catch (Exception ex) {
+                        log.error("Cannot delete owner " + ownerModel.getOwner(selectedRow) + ".");
+                        //result = result
+                    }
+                }
+                return convert(toDeleteRows);
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                int[] indexes = get();
+                if (indexes != null && indexes.length != 0) {
+                    ownerModel.deleteOwners(indexes);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of DeleteOwnerWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of DeleteOwnerWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. DeleteOwnerWorker");
+            }
+        }
+    }
+    
+    private class DeletePropertyWorker extends SwingWorker<int[], Void> {
+
+        @Override
+        protected int[] doInBackground() {
+            int[] selectedRows = JTableProperty.getSelectedRows();
+            List<Integer> toDeleteRows = new ArrayList<>();
+            if (selectedRows.length >= 0) {
+                for (int selectedRow : selectedRows) {
+                    Property property = propertyModel.getProperty(selectedRow);
+                    try {
+                        propertyManager.deleteProperty(property.getId());
+                        toDeleteRows.add(selectedRow);
+                    }catch (Exception ex) {
+                        log.error("Cannot delete property." + ex);
+                    }
+                }
+                return convert(toDeleteRows);
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                int[] indexes = get();
+                if (indexes != null && indexes.length != 0) {
+                    propertyModel.deleteProperties(indexes);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of DeletePropertyWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of DeletePropertyWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. DeletePropertyWorker");
             }
         }
     }
@@ -430,6 +516,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         jButton9.setText(bundle.getString("delete-selected")); // NOI18N
         jButton9.setEnabled(false);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText(bundle.getString("search-by-city")); // NOI18N
 
@@ -575,7 +666,6 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName(bundle.getString("owners")); // NOI18N
-        jTabbedPane1.getAccessibleContext().setAccessibleParent(jPanel2);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -620,7 +710,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        DeleteOwnerWorker w = new DeleteOwnerWorker();
+        w.execute();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void JTablePropertiesMouseReleased(java.awt.event.MouseEvent evt) {                                           
@@ -668,9 +759,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void JTableOwnersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableOwnersMouseReleased
-        if(JTableOwners.getSelectedRowCount() != 1)
+        if(JTableOwners.getSelectedRowCount() != 1){
             jButton2.setEnabled(false);
+            jButton3.setEnabled(false);
+        }
         jButton2.setEnabled(true);
+        jButton3.setEnabled(true);
     }//GEN-LAST:event_JTableOwnersMouseReleased
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -684,10 +778,18 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void JTablePropertyMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTablePropertyMouseReleased
-        if(JTableProperty.getSelectedRowCount() != 1)
+        if(JTableProperty.getSelectedRowCount() != 1){
             jButton8.setEnabled(false);
+            jButton9.setEnabled(false);
+        }
+        jButton9.setEnabled(true);
         jButton8.setEnabled(true);
     }//GEN-LAST:event_JTablePropertyMouseReleased
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        DeletePropertyWorker w = new DeletePropertyWorker();
+        w.execute();
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments

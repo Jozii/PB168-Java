@@ -102,7 +102,10 @@ public class OwnerManagerImpl implements OwnerManager {
                 if (preparedStatement.executeUpdate() != 1)
                     throw new IllegalArgumentException("Cannot update owner" + owner);
             }
-        } catch (SQLException e) {
+        }catch (SQLIntegrityConstraintViolationException ex){
+            log.error("Cannot delete owner while he has title deed ");
+        }
+        catch (SQLException e) {
             log.error("DB connection error ", e);
             throw new ServiceFailureException("Error when retrieving all owners", e);
         }
