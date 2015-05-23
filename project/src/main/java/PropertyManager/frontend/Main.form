@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="PropertyManager.frontend.Main">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="528" height="400"/>
+    </constraints>
+    <properties>
+      <preferredSize width="400" height="400"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <tabbedpane id="82d6d" binding="tabbedPane1" default-binding="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="200"/>
+          </grid>
+        </constraints>
+        <properties>
+          <tabPlacement value="2"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="4622c" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title-resource-bundle="Texts" title-key="owners"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="ecd76">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="ef148" class="javax.swing.JTable" binding="table1" custom-create="true" default-binding="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <component id="30dd8" class="javax.swing.JButton" binding="vytvoriťButton2" default-binding="true">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="create"/>
+                </properties>
+              </component>
+              <component id="4c294" class="javax.swing.JButton" binding="smazatButton1" default-binding="true">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="delete"/>
+                </properties>
+              </component>
+              <component id="e2b40" class="javax.swing.JButton" binding="upravitButton3" default-binding="true">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="update"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="62a59" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title-resource-bundle="Texts" title-key="properties"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="9acc2">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="9a5d5" class="javax.swing.JTable" binding="table2" custom-create="true" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <autoResizeMode value="4"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <component id="948fa" class="javax.swing.JButton" binding="vytvoriťButton3" default-binding="true">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="create"/>
+                </properties>
+              </component>
+              <component id="d2d3b" class="javax.swing.JButton" binding="smazatButton3" default-binding="true">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="delete"/>
+                </properties>
+              </component>
+              <component id="59a51" class="javax.swing.JButton" binding="upravitButton" default-binding="true">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="update"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="e35dc" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <tabbedpane title-resource-bundle="Texts" title-key="title-deeds"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="f92ee">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="d0a06" class="javax.swing.JTable" binding="table3" custom-create="true" default-binding="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <component id="25f3d" class="javax.swing.JButton" binding="vytvoriťButton" default-binding="true">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="11"/>
+                  <horizontalTextPosition value="11"/>
+                  <inheritsPopupMenu value="false"/>
+                  <requestFocusEnabled value="true"/>
+                  <rolloverEnabled value="false"/>
+                  <selected value="false"/>
+                  <text resource-bundle="Texts" key="create"/>
+                </properties>
+              </component>
+              <component id="5a706" class="javax.swing.JButton" binding="upravitButton1">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="Texts" key="update"/>
+                </properties>
+              </component>
+              <component id="a5528" class="javax.swing.JButton" binding="smazatButton" default-binding="true">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <autoscrolls value="false"/>
+                  <borderPainted value="true"/>
+                  <contentAreaFilled value="true"/>
+                  <defaultCapable value="true"/>
+                  <text resource-bundle="Texts" key="delete"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </tabbedpane>
+    </children>
+  </grid>
+</form>
