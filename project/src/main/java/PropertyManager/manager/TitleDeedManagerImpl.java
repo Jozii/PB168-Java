@@ -58,8 +58,8 @@ public class TitleDeedManagerImpl implements TitleDeedManager {
         if (titleDeed.getId() == null) throw new IllegalEntityException("title deed with null id " + titleDeed);
         int n = jdbc.update("UPDATE titledeed SET ownerId=?, propertyId=?, startDate=?, endDate=?",
                 titleDeed.getOwner(), titleDeed.getProperty(), Date.valueOf(titleDeed.getStartDate()),Date.valueOf(titleDeed.getEndDate()));
-        if (n != 1) throw new IllegalEntityException("title deed " + titleDeed + " not updated");
-
+        //if (n != 1) throw new IllegalEntityException("title deed " + titleDeed + " not updated");
+        // POZOR, UPRAVENEEEE
     }
 
     @Override

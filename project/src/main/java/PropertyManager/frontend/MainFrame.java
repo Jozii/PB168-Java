@@ -48,12 +48,14 @@ public class MainFrame extends javax.swing.JFrame {
     private TitleDeedTableModel titleDeedModel;
     private List<JComboBox> comboBoxOwners = new ArrayList<>();
     private List<JComboBox> comboBoxProperties = new ArrayList<>();
-    private DefaultComboBoxModel ownersComboBoxModel = new DefaultComboBoxModel();
-    private DefaultComboBoxModel propertiesComboBoxModel = new DefaultComboBoxModel();
+    //private DefaultComboBoxModel ownersComboBoxModel = new DefaultComboBoxModel();
+    //private DefaultComboBoxModel propertiesComboBoxModel = new DefaultComboBoxModel();
     private FindAllOwnersWorker findAllOwnersWorker;
     private FindAllPropertiesWorker findAllPropertiesWorker;
     private FindAllTitleDeedsWorker findAllTitleDeedsWorker;
     private ResourceBundle rb = ResourceBundle.getBundle("texts");
+    
+
 
     
     public OwnerTableModel getOwnerModel() {
@@ -78,6 +80,33 @@ public class MainFrame extends javax.swing.JFrame {
 
     public JTable getJTableTitleDeed() {
         return JTableTitleDeed;
+    }
+    
+    
+    
+
+    JDatePickerImpl setDatePickerStart() {
+        UtilDateModel model = new UtilDateModel();
+        model.setDate(1980, 01, 01);
+        Properties p = new Properties();
+        p.put("text.today", rb.getString("day"));
+        p.put("text.month", rb.getString("month"));
+        p.put("text.year", rb.getString("year"));
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
+        return datePicker;
+    }
+
+    JDatePickerImpl setDatePickerEnd() {
+        UtilDateModel model = new UtilDateModel();
+        model.setDate(1980, 01, 01);
+        Properties p = new Properties();
+        p.put("text.today", rb.getString("day"));
+        p.put("text.month", rb.getString("month"));
+        p.put("text.year", rb.getString("year"));
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
+        return datePicker;
     }
     
     /**
@@ -202,6 +231,56 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    //COMBO >D
+    
+    /*public class OwnersComboWorker extends SwingWorker<List<Owner>, Integer> {
+
+        @Override
+        protected List<Owner> doInBackground() throws Exception {
+            return ownerManager.findAllOwners();
+        }
+
+        @Override
+        protected void done() {
+            try {
+                List<Owner> owners = get();
+                ownersComboBoxModel.removeAllElements();
+                for (Owner owner : owners) {
+                    ownersComboBoxModel.addElement(owner);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of OwnersComboWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of OwnersComboWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. OwnersComboWorker");
+            }
+        }
+    }
+
+    public class PropertiesComboWorker extends SwingWorker<List<Property>, Integer> {
+
+        @Override
+        protected List<Property> doInBackground() throws Exception {
+            return propertyManager.findAllProperties();
+        }
+
+        @Override
+        protected void done() {
+            try {
+                List<Property> properties = get();
+                propertiesComboBoxModel.removeAllElements();
+                for (Property property : properties) {
+                    propertiesComboBoxModel.addElement(property);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of PropertiesComboWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of PropertiesComboWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. PropertiessComboWorker");
+            }
+        }
+    }*/
+    
     // DELETE
     
     private int[] convert(List<Integer> o) {
@@ -286,6 +365,45 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
     }
+    
+    private class DeleteTitleDeedWorker extends SwingWorker<int[], Void> {
+
+        @Override
+        protected int[] doInBackground() {
+            int[] selectedRows = JTableTitleDeed.getSelectedRows();
+            List<Integer> toDeleteRows = new ArrayList<>();
+            if (selectedRows.length >= 0) {
+                for (int selectedRow : selectedRows) {
+                    TitleDeed titleDeed = titleDeedModel.getTitleDeed(selectedRow);
+                    try {
+                        titleDeedManager.deleteTitleDeed(titleDeed);
+                        toDeleteRows.add(selectedRow);
+                    }catch (Exception ex) {
+                        log.error("Cannot delete titleDeed." + ex);
+                    }
+                }
+                return convert(toDeleteRows);
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                int[] indexes = get();
+                if (indexes != null && indexes.length != 0) {
+                    titleDeedModel.deleteTitleDeeds(indexes);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of DeleteTitleDeedWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of DeleteTitleDeedWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. DeleteTitleDeedWorker");
+            }
+        }
+    }
+    
+    
     /**
      * ################# END SECTION #################
      */
@@ -327,6 +445,34 @@ public class MainFrame extends javax.swing.JFrame {
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
         return datePicker;
     }
+    
+    /*public JDatePickerImpl setDatePickerStart() {
+        UtilDateModel model = new UtilDateModel();
+        model.setDate(2014, 01, 01);
+        // Need this...
+        Properties p = new Properties();
+        p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
+        p.put("text.month", java.util.ResourceBundle.getBundle("texts").getString("MONTH"));
+        p.put("text.year", java.util.ResourceBundle.getBundle("texts").getString("YEAR"));
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        // Don't know about the formatter, but there it is...
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
+        return datePicker;
+    }
+    
+    public JDatePickerImpl setDatePickerEnd() {
+        UtilDateModel model = new UtilDateModel();
+        model.setDate(2014, 01, 01);
+        // Need this...
+        Properties p = new Properties();
+        p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
+        p.put("text.month", java.util.ResourceBundle.getBundle("texts").getString("MONTH"));
+        p.put("text.year", java.util.ResourceBundle.getBundle("texts").getString("YEAR"));
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        // Don't know about the formatter, but there it is...
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
+        return datePicker;
+    }*/
     /**
      * Creates new form MainFrame
      */
@@ -578,6 +724,11 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.addTab(bundle.getString("properties"), jPanel2); // NOI18N
 
         JTableTitleDeed.setModel(new TitleDeedTableModel());
+        JTableTitleDeed.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                JTableTitleDeedMouseReleased(evt);
+            }
+        });
         jScrollPane3.setViewportView(JTableTitleDeed);
 
         jButton11.setText(bundle.getString("list-all")); // NOI18N
@@ -590,6 +741,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jButton13.setText(bundle.getString("update-selected")); // NOI18N
+        jButton13.setEnabled(false);
         jButton13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton13ActionPerformed(evt);
@@ -597,6 +749,12 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jButton14.setText(bundle.getString("delete-selected")); // NOI18N
+        jButton14.setEnabled(false);
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText(bundle.getString("search-from-to")); // NOI18N
 
@@ -690,7 +848,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                int selectedRow = JTableTitleDeed.getSelectedRow();
+                new TitleDeedCreateForm(MainFrame.this, titleDeedModel.getTitleDeed(selectedRow), selectedRow, rb.getString("update")).setVisible(true);
+            }
+        });
+        jButton2.setEnabled(false);
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -704,7 +868,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TitleDeedCreateForm().setVisible(true);
+                new TitleDeedCreateForm(MainFrame.this, null, -1, rb.getString("create")).setVisible(true);
             }
         });
     }//GEN-LAST:event_jButton12ActionPerformed
@@ -790,6 +954,20 @@ public class MainFrame extends javax.swing.JFrame {
         DeletePropertyWorker w = new DeletePropertyWorker();
         w.execute();
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        DeleteTitleDeedWorker w = new DeleteTitleDeedWorker();
+        w.execute();
+    }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void JTableTitleDeedMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableTitleDeedMouseReleased
+        if(JTableTitleDeed.getSelectedRowCount() != 1){
+            jButton13.setEnabled(false);
+            jButton14.setEnabled(false);
+        }
+        jButton13.setEnabled(true);
+        jButton14.setEnabled(true);
+    }//GEN-LAST:event_JTableTitleDeedMouseReleased
 
     /**
      * @param args the command line arguments
