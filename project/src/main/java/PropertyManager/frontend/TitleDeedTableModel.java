@@ -17,8 +17,8 @@ import java.util.ResourceBundle;
  */
 public class TitleDeedTableModel extends AbstractTableModel {
     final static Logger log = LoggerFactory.getLogger(TitleDeedTableModel.class);
-    //private static OwnerManager ownerManager = AppCommons.getOwnerManager();
-    //private static PropertyManager propertyManager = AppCommons.getPropertyManager();
+    private static OwnerManager ownerManager = AppCommons.getOwnerManager();
+    private static PropertyManager propertyManager = AppCommons.getPropertyManager();
 
     private List<TitleDeed> deeds = new ArrayList<TitleDeed>();
 
@@ -59,11 +59,11 @@ public class TitleDeedTableModel extends AbstractTableModel {
         TitleDeed deed = deeds.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                //return ownerManager.getOwnerById(deed.getOwner()).getName();
-                return deed.getOwner();
+                return ownerManager.getOwnerById(deed.getOwner()).getName()+ " " + ownerManager.getOwnerById(deed.getOwner()).getSurname();
+                //return deed.getOwner();
             case 1:
-                //return propertyManager.getPropertyById(deed.getProperty()).getAddressStreet();
-                return deed.getProperty();
+                return propertyManager.getPropertyById(deed.getProperty()).getAddressStreet() + ", " + propertyManager.getPropertyById(deed.getProperty()).getAddressTown();
+                //return deed.getProperty();
             case 2:
                 return deed.getStartDate();
             case 3:
@@ -78,7 +78,7 @@ public class TitleDeedTableModel extends AbstractTableModel {
         switch(columnIndex) {
             case 0:
             case 1:
-                return Long.class;
+                return String.class;
             case 2:
             case 3:
                 return LocalDate.class;

@@ -825,7 +825,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         jTabbedPane1.getAccessibleContext().setAccessibleName(bundle.getString("owners")); // NOI18N
 
-        pack();
+        setSize(new java.awt.Dimension(816, 544));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
