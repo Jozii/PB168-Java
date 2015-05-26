@@ -86,7 +86,7 @@ public class MainFrame extends javax.swing.JFrame {
     
     
 
-    private JDatePickerImpl setDatePickerStart() {
+    public JDatePickerImpl setDatePickerStart() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(1980, 01, 01);
         Properties p = new Properties();
@@ -98,7 +98,7 @@ public class MainFrame extends javax.swing.JFrame {
         return datePicker;
     }
 
-    private JDatePickerImpl setDatePickerEnd() {
+    public JDatePickerImpl setDatePickerEnd() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(1980, 01, 01);
         Properties p = new Properties();
@@ -276,7 +276,6 @@ public class MainFrame extends javax.swing.JFrame {
                         toDeleteRows.add(selectedRow);
                     }catch (Exception ex) {
                         log.error("Cannot delete owner " + ownerModel.getOwner(selectedRow) + ".");
-                        //result = result
                     }
                 }
                 return convert(toDeleteRows);

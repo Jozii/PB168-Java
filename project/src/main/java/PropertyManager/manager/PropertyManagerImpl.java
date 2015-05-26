@@ -138,6 +138,9 @@ public class PropertyManagerImpl implements PropertyManager {
                     throw new ServiceFailureException("did not delete property with id =" + propertyID);
                 }
             }
+        }catch (SQLIntegrityConstraintViolationException ex){
+            log.error("Cannot delete property while he has title deed ");
+            throw new ServiceFailureException("Cannot delete property with titleDeed", ex);
         } catch (SQLException ex) {
             log.error("connection problem", ex);
             throw new ServiceFailureException("Error when retrieving all properties", ex);
