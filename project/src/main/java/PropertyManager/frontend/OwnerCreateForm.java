@@ -63,7 +63,7 @@ public class OwnerCreateForm extends javax.swing.JFrame {
             Instant instant = localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
             Date time = Date.from(instant);
             Object o = (Object) time;
-            datePicker.getModel().setDate(owner.getBorn().getYear(), owner.getBorn().getMonthValue(),owner.getBorn().getDayOfMonth());
+            datePicker.getModel().setDate(owner.getBorn().getYear(), owner.getBorn().getMonthValue() - 1,owner.getBorn().getDayOfMonth());
             datePicker.getModel().setSelected(true);
         }
         this.setVisible(true);

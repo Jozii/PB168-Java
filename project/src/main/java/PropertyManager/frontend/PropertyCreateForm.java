@@ -68,7 +68,7 @@ public class PropertyCreateForm extends javax.swing.JFrame {
             Instant instant = localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
             Date time = Date.from(instant);
             Object o = (Object) time;
-            datePicker.getModel().setDate(property.getDateOfBuild().getYear(), property.getDateOfBuild().getMonthValue(),property.getDateOfBuild().getDayOfMonth());
+            datePicker.getModel().setDate(property.getDateOfBuild().getYear(), property.getDateOfBuild().getMonthValue() -1,property.getDateOfBuild().getDayOfMonth());
             datePicker.getModel().setSelected(true);
             jTextField6.setText(property.getDescription());
         }

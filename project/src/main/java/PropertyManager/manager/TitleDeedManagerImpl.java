@@ -7,6 +7,7 @@ import java.util.Map;
 
 import PropertyManager.common.IllegalEntityException;
 import PropertyManager.common.ValidationException;
+import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.*;
@@ -127,6 +128,14 @@ public class TitleDeedManagerImpl implements TitleDeedManager {
         return owners;
     }
 
+    @Override
+    public List<TitleDeed> findTitleDeedsFromTo(LocalDate from, LocalDate to) {
+        if (from.compareTo(to) < 0)
+            throw new IllegalArgumentException("from, to");
+        log.debug("findTitleDeedsFromTo(LocalDate from, LocalDate to)");
+        return jdbc.query("SELECT id, ownerId, propertyId, startDate, endDate FROM TitleDeed WHERE startDate >= ? AND endDate <= ?",titleDeedMapper, Date.valueOf(from), Date.valueOf(to));
+    }
+
     private void validate(TitleDeed titleDeed) {
         if (titleDeed == null) throw new IllegalArgumentException("title deed is null " + titleDeed);
         if (titleDeed.getOwner() == null) throw new ValidationException("owner is null " + titleDeed);
@@ -134,4 +143,5 @@ public class TitleDeedManagerImpl implements TitleDeedManager {
         if (titleDeed.getStartDate() == null) throw new ValidationException("start date is null " + titleDeed);
         //if (titleDeed.getEndDate() == null) throw new ValidationException("end date is null " + titleDeed);
     }
+    
 }

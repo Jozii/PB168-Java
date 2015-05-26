@@ -11,7 +11,11 @@ import PropertyManager.common.SpringConfig;
 import PropertyManager.manager.*;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -52,9 +56,8 @@ public class MainFrame extends javax.swing.JFrame {
     private FindAllPropertiesWorker findAllPropertiesWorker;
     private FindAllTitleDeedsWorker findAllTitleDeedsWorker;
     private ResourceBundle rb = ResourceBundle.getBundle("texts");
-    
-
-
+    private JDatePickerImpl fromDatePicker;
+    private JDatePickerImpl toDatePicker;
     
     public OwnerTableModel getOwnerModel() {
         return ownerModel;
@@ -83,7 +86,7 @@ public class MainFrame extends javax.swing.JFrame {
     
     
 
-    JDatePickerImpl setDatePickerStart() {
+    private JDatePickerImpl setDatePickerStart() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(1980, 01, 01);
         Properties p = new Properties();
@@ -95,7 +98,7 @@ public class MainFrame extends javax.swing.JFrame {
         return datePicker;
     }
 
-    JDatePickerImpl setDatePickerEnd() {
+    private JDatePickerImpl setDatePickerEnd() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(1980, 01, 01);
         Properties p = new Properties();
@@ -105,6 +108,28 @@ public class MainFrame extends javax.swing.JFrame {
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
         return datePicker;
+    }
+
+    private void initDatePickers() {
+        fromDatePicker = setDateTitleDeedFromTo();
+        toDatePicker = setDateTitleDeedFromTo();
+        
+        LocalDate localDate = LocalDate.now();        
+        
+        fromDatePicker.getModel().setDate(localDate.getYear(), localDate.getMonthValue() - 1,localDate.getDayOfMonth());
+        toDatePicker.getModel().setDate(localDate.getYear(), localDate.getMonthValue() - 1,localDate.getDayOfMonth());
+        
+        fromDatePicker.setBounds(90, 340, 200, 30);
+        fromDatePicker.setVisible(true);
+        
+        toDatePicker.setBounds(300, 340, 200, 30);
+        toDatePicker.setVisible(true);
+        
+        fromDatePicker.getModel().setSelected(true);
+        toDatePicker.getModel().setSelected(true);
+        
+        jPanel3.add(fromDatePicker);
+        jPanel3.add(toDatePicker);
     }
     
     /**
@@ -392,6 +417,18 @@ public class MainFrame extends javax.swing.JFrame {
         return datePicker;
     }
     
+    public JDatePickerImpl setDateTitleDeedFromTo() {
+        UtilDateModel model = new UtilDateModel();
+        model.setDate(2000, 01, 01);
+        Properties p = new Properties();
+        p.put("text.today", rb.getString("day"));
+        p.put("text.month", rb.getString("month"));
+        p.put("text.year", rb.getString("year"));
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
+        return datePicker;
+    }
+    
     /**
      * Creates new form MainFrame
      */
@@ -411,6 +448,9 @@ public class MainFrame extends javax.swing.JFrame {
         titleDeedModel = (TitleDeedTableModel)JTableTitleDeed.getModel();
         findAllTitleDeedsWorker = new FindAllTitleDeedsWorker();
         findAllTitleDeedsWorker.execute();
+        
+        initDatePickers();
+        
     }
     
     /**
@@ -450,15 +490,13 @@ public class MainFrame extends javax.swing.JFrame {
         jButton13 = new javax.swing.JButton();
         jButton14 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jButton15 = new javax.swing.JButton();
-        jButton16 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
         setTitle(bundle.getString("title")); // NOI18N
-        setMinimumSize(new java.awt.Dimension(930, 530));
-        setPreferredSize(new java.awt.Dimension(930, 530));
+        setMinimumSize(new java.awt.Dimension(960, 530));
+        setPreferredSize(new java.awt.Dimension(960, 530));
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
@@ -678,11 +716,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel3.setText(bundle.getString("search-from-to")); // NOI18N
 
-        jButton15.setText(bundle.getString("from")); // NOI18N
-
-        jButton16.setText(bundle.getString("to")); // NOI18N
-
         jButton17.setText(bundle.getString("search")); // NOI18N
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -695,19 +734,13 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jButton11)
                     .addComponent(jLabel3))
                 .addGap(190, 190, 190)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton12)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton16)))
+                .addComponent(jButton12)
+                .addGap(35, 35, 35)
+                .addComponent(jButton13)
                 .addGap(35, 35, 35)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton13)
-                        .addGap(35, 35, 35)
-                        .addComponent(jButton14))
-                    .addComponent(jButton17))
+                    .addComponent(jButton17)
+                    .addComponent(jButton14))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -720,14 +753,11 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jButton12)
                     .addComponent(jButton13)
                     .addComponent(jButton14))
-                .addGap(41, 41, 41)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton15)
-                        .addComponent(jButton16)
-                        .addComponent(jButton17))
-                    .addComponent(jLabel3))
-                .addGap(0, 136, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton17))
+                .addGap(0, 135, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(bundle.getString("title-deeds"), jPanel3); // NOI18N
@@ -890,6 +920,11 @@ public class MainFrame extends javax.swing.JFrame {
         jButton14.setEnabled(true);
     }//GEN-LAST:event_JTableTitleDeedMouseReleased
 
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        //search titledeed from to
+        System.out.println(fromDatePicker.getModel().getDay() + " " + fromDatePicker.getModel().getMonth() + "  " + fromDatePicker.getModel().getYear());
+    }//GEN-LAST:event_jButton17ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -936,8 +971,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

@@ -1,5 +1,6 @@
 package PropertyManager.manager;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -15,4 +16,5 @@ public interface TitleDeedManager {
     List<TitleDeed> findAllTitleDeedForProperty(Long property);
     List<Property> findPropertiesForOwner(Long owner);//ja
     List<Owner> findOwnersForProperty(Long property);//ja
+    List<TitleDeed> findTitleDeedsFromTo(LocalDate from, LocalDate to);
 }
