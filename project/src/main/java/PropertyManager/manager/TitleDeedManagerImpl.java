@@ -130,7 +130,7 @@ public class TitleDeedManagerImpl implements TitleDeedManager {
 
     @Override
     public List<TitleDeed> findTitleDeedsFromTo(LocalDate from, LocalDate to) {
-        if (from.compareTo(to) < 0)
+        if (from.compareTo(to) > 0)
             throw new IllegalArgumentException("from, to");
         log.debug("findTitleDeedsFromTo(LocalDate from, LocalDate to)");
         return jdbc.query("SELECT id, ownerId, propertyId, startDate, endDate FROM TitleDeed WHERE startDate >= ? AND endDate <= ?",titleDeedMapper, Date.valueOf(from), Date.valueOf(to));

@@ -374,6 +374,36 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    private class FindAllTitleDeedsFromToWorker extends SwingWorker<List<TitleDeed>, Integer> {
+        
+        private LocalDate from;
+        private LocalDate to;
+
+        public FindAllTitleDeedsFromToWorker(LocalDate from, LocalDate to) {
+            this.from = from;
+            this.to = to;
+        }
+        
+        @Override
+        protected List<TitleDeed> doInBackground() throws Exception {
+            return titleDeedManager.findTitleDeedsFromTo(from, to);
+        }
+
+        @Override
+        protected void done() {
+            try{
+                log.debug("Changing title deed model - title deeds from " + from + " to " + to +" are loaded from database.");
+                titleDeedModel.setTitleDeeds(get());
+            }catch(IllegalArgumentException ex) {
+                log.error(ex.getMessage());
+            }catch(ExecutionException ex) {
+                log.error("Exception was thrown in FindAllTitleDeedsFromToWorker in method doInBackGround " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("Method doInBackground has been interrupted in FindAllTitleDeedsFromToWorker " + ex.getCause());
+                throw new RuntimeException("Operation interrupted in FindAllTitleDeedsFromToWorker");
+            }
+        }
+    }
     
     /**
      * ################# END SECTION #################
@@ -690,6 +720,11 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane3.setViewportView(JTableTitleDeed);
 
         jButton11.setText(bundle.getString("list-all")); // NOI18N
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setText(bundle.getString("create-new-titledeed")); // NOI18N
         jButton12.addActionListener(new java.awt.event.ActionListener() {
@@ -786,11 +821,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        /*java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PropertyCreateForm().setVisible(true);
-            }
-        });*/
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new PropertyCreateForm(MainFrame.this, null, -1, rb.getString("create")).setVisible(true);
@@ -922,8 +952,21 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
         //search titledeed from to
-        System.out.println(fromDatePicker.getModel().getDay() + " " + fromDatePicker.getModel().getMonth() + "  " + fromDatePicker.getModel().getYear());
+        LocalDate from = LocalDate.of(fromDatePicker.getModel().getYear(), fromDatePicker.getModel().getMonth() + 1, fromDatePicker.getModel().getDay());
+        LocalDate to = LocalDate.of(toDatePicker.getModel().getYear(), toDatePicker.getModel().getMonth() + 1, toDatePicker.getModel().getDay());
+        if (from.compareTo(to) > 0) {
+            JOptionPane.showMessageDialog(rootPane, rb.getString("from-less-than-to"),null,JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        FindAllTitleDeedsFromToWorker worker = new FindAllTitleDeedsFromToWorker(from, to);
+        worker.execute();
     }//GEN-LAST:event_jButton17ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        findAllTitleDeedsWorker = new FindAllTitleDeedsWorker();
+        findAllTitleDeedsWorker.execute();
+        
+    }//GEN-LAST:event_jButton11ActionPerformed
 
     /**
      * @param args the command line arguments
