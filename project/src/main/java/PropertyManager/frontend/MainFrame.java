@@ -48,8 +48,6 @@ public class MainFrame extends javax.swing.JFrame {
     private TitleDeedTableModel titleDeedModel;
     private List<JComboBox> comboBoxOwners = new ArrayList<>();
     private List<JComboBox> comboBoxProperties = new ArrayList<>();
-    //private DefaultComboBoxModel ownersComboBoxModel = new DefaultComboBoxModel();
-    //private DefaultComboBoxModel propertiesComboBoxModel = new DefaultComboBoxModel();
     private FindAllOwnersWorker findAllOwnersWorker;
     private FindAllPropertiesWorker findAllPropertiesWorker;
     private FindAllTitleDeedsWorker findAllTitleDeedsWorker;
@@ -231,58 +229,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    //COMBO >D
-    
-    /*public class OwnersComboWorker extends SwingWorker<List<Owner>, Integer> {
-
-        @Override
-        protected List<Owner> doInBackground() throws Exception {
-            return ownerManager.findAllOwners();
-        }
-
-        @Override
-        protected void done() {
-            try {
-                List<Owner> owners = get();
-                ownersComboBoxModel.removeAllElements();
-                for (Owner owner : owners) {
-                    ownersComboBoxModel.addElement(owner);
-                }
-            } catch (ExecutionException ex) {
-                log.error("Exception thrown in doInBackground of OwnersComboWorker: " + ex.getCause());
-            } catch (InterruptedException ex) {
-                log.error("doInBackground of OwnersComboWorker interrupted: " + ex.getCause());
-                throw new RuntimeException("Operation interrupted.. OwnersComboWorker");
-            }
-        }
-    }
-
-    public class PropertiesComboWorker extends SwingWorker<List<Property>, Integer> {
-
-        @Override
-        protected List<Property> doInBackground() throws Exception {
-            return propertyManager.findAllProperties();
-        }
-
-        @Override
-        protected void done() {
-            try {
-                List<Property> properties = get();
-                propertiesComboBoxModel.removeAllElements();
-                for (Property property : properties) {
-                    propertiesComboBoxModel.addElement(property);
-                }
-            } catch (ExecutionException ex) {
-                log.error("Exception thrown in doInBackground of PropertiesComboWorker: " + ex.getCause());
-            } catch (InterruptedException ex) {
-                log.error("doInBackground of PropertiesComboWorker interrupted: " + ex.getCause());
-                throw new RuntimeException("Operation interrupted.. PropertiessComboWorker");
-            }
-        }
-    }*/
-    
-    // DELETE
-    
     private int[] convert(List<Integer> o) {
         int[] result = new int[o.size()];
         for (int i = 0; i < o.size(); i++) {
@@ -446,33 +392,6 @@ public class MainFrame extends javax.swing.JFrame {
         return datePicker;
     }
     
-    /*public JDatePickerImpl setDatePickerStart() {
-        UtilDateModel model = new UtilDateModel();
-        model.setDate(2014, 01, 01);
-        // Need this...
-        Properties p = new Properties();
-        p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
-        p.put("text.month", java.util.ResourceBundle.getBundle("texts").getString("MONTH"));
-        p.put("text.year", java.util.ResourceBundle.getBundle("texts").getString("YEAR"));
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        // Don't know about the formatter, but there it is...
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
-        return datePicker;
-    }
-    
-    public JDatePickerImpl setDatePickerEnd() {
-        UtilDateModel model = new UtilDateModel();
-        model.setDate(2014, 01, 01);
-        // Need this...
-        Properties p = new Properties();
-        p.put("text.today", java.util.ResourceBundle.getBundle("texts").getString("TODAY"));
-        p.put("text.month", java.util.ResourceBundle.getBundle("texts").getString("MONTH"));
-        p.put("text.year", java.util.ResourceBundle.getBundle("texts").getString("YEAR"));
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-        // Don't know about the formatter, but there it is...
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DataLabelFormater());
-        return datePicker;
-    }*/
     /**
      * Creates new form MainFrame
      */
@@ -538,7 +457,8 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
         setTitle(bundle.getString("title")); // NOI18N
-        setMinimumSize(new java.awt.Dimension(890, 530));
+        setMinimumSize(new java.awt.Dimension(930, 530));
+        setPreferredSize(new java.awt.Dimension(930, 530));
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
