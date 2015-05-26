@@ -276,6 +276,7 @@ public class MainFrame extends javax.swing.JFrame {
                         toDeleteRows.add(selectedRow);
                     }catch (Exception ex) {
                         log.error("Cannot delete owner " + ownerModel.getOwner(selectedRow) + ".");
+                        //JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-owner"), null, JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
                 return convert(toDeleteRows);
@@ -313,6 +314,7 @@ public class MainFrame extends javax.swing.JFrame {
                         toDeleteRows.add(selectedRow);
                     }catch (Exception ex) {
                         log.error("Cannot delete property." + ex);
+                        //JOptionPane.showMessageDialog(null, rb.getString("cannot-delete-property"));
                     }
                 }
                 return convert(toDeleteRows);
