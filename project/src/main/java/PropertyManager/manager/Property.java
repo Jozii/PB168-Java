@@ -121,9 +121,4 @@ public class Property {
     public int hashCode() {
         return id.hashCode();
     }
-    
-    @Override
-    public String toString() {
-        return addressStreet + ", " + addressTown;
-    }
 }

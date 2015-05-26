@@ -127,6 +127,14 @@ public class Owner {
 
     @Override
     public String toString() {
-        return id + ". " + name + " " + surname;
+        return "Owner{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", born=" + born +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", addressStreet='" + addressStreet + '\'' +
+                ", addressTown='" + addressTown + '\'' +
+                '}';
     }
 }
