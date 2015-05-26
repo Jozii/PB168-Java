@@ -7,6 +7,7 @@ package PropertyManager.frontend;
 
 import PropertyManager.common.DBUtils;
 import PropertyManager.common.DataLabelFormater;
+import PropertyManager.common.ServiceFailureException;
 import PropertyManager.common.SpringConfig;
 import PropertyManager.manager.*;
 import java.sql.SQLException;
@@ -274,10 +275,9 @@ public class MainFrame extends javax.swing.JFrame {
                     try {
                         ownerManager.deleteOwner(owner);
                         toDeleteRows.add(selectedRow);
-                    }catch (Exception ex) {
-                        log.error("Cannot delete owner " + ownerModel.getOwner(selectedRow) + ".");
-                        //JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-owner"), null, JOptionPane.INFORMATION_MESSAGE);
-                    }
+                    }catch(Exception x) {
+                        throw new ServiceFailureException(owner.toString());
+                    }   
                 }
                 return convert(toDeleteRows);
             }
@@ -291,7 +291,8 @@ public class MainFrame extends javax.swing.JFrame {
                 if (indexes != null && indexes.length != 0) {
                     ownerModel.deleteOwners(indexes);
                 }
-            } catch (ExecutionException ex) {
+            }catch (ExecutionException ex) {
+                JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-owner") + " " + ex.getCause(), null, JOptionPane.INFORMATION_MESSAGE);
                 log.error("Exception thrown in doInBackground of DeleteOwnerWorker: " + ex.getCause());
             } catch (InterruptedException ex) {
                 log.error("doInBackground of DeleteOwnerWorker interrupted: " + ex.getCause());
