@@ -36,7 +36,7 @@ public class OwnerCreateForm extends javax.swing.JFrame {
     private DataLabelFormater formater = new DataLabelFormater();
     private final static Logger log = LoggerFactory.getLogger(MainFrame.class);
     private ResourceBundle rb = ResourceBundle.getBundle("texts");
-    private String x;
+    
     public OwnerCreateForm(MainFrame context, Owner owner, int rowIndex, String action) {
         initComponents();
         this.context = context;
