@@ -104,6 +104,7 @@ public class OwnerManagerImpl implements OwnerManager {
             }
         }catch (SQLIntegrityConstraintViolationException ex){
             log.error("Cannot delete owner while he has title deed ");
+            throw new ServiceFailureException("Cannot delete owner with titleDeed", ex);
         }
         catch (SQLException e) {
             log.error("DB connection error ", e);
