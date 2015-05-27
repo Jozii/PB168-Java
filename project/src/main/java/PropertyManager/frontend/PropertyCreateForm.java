@@ -80,7 +80,6 @@ public class PropertyCreateForm extends javax.swing.JFrame {
         @Override
         protected Property doInBackground() throws Exception {
             log.debug("Creating new property in doInBackground " + property);
-            System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo");
             Property o = getPropertyFromForm();
             if (o == null) {
                 log.error(rb.getString("wrong-enter-data"));
@@ -131,6 +130,7 @@ public class PropertyCreateForm extends javax.swing.JFrame {
                 propertiesModel.updateProperty(o, rowIndex);
                 log.info("Property " + o + " has been updated");
                 context.getJTableProperty().getSelectionModel().clearSelection();
+                context.getPropertyUpdateButton().setEnabled(false);
                 PropertyCreateForm.this.dispose();
             } catch (IllegalArgumentException ex) {
                 warningMessageBox(ex.getMessage());
@@ -159,7 +159,10 @@ public class PropertyCreateForm extends javax.swing.JFrame {
             return null;
         }
         
-        //BigDecimal price = new BigInteger(jTextField3.getText());  // HINT
+        if (!(jTextField3.getText().matches("(\\d)+|((\\d)+.(\\d)+)"))) {
+            warningMessageBox(rb.getString("wrong-number-format"));
+            return null;
+        }
         BigDecimal price = new BigDecimal(jTextField3.getText());
         if (price == null) {
             warningMessageBox(rb.getString("fill-price"));
@@ -172,6 +175,10 @@ public class PropertyCreateForm extends javax.swing.JFrame {
             return null;
         }
         
+        if (!(jTextField5.getText().matches("(\\d)+"))) {
+            warningMessageBox(rb.getString("wrong-number-format"));
+            return null;
+        }
         int meters = Integer.valueOf(jTextField5.getText());
         if (meters == 0) {
             warningMessageBox(rb.getString("fill-meters"));

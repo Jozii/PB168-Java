@@ -47,8 +47,6 @@ public class TitleDeedCreateForm extends javax.swing.JFrame {
     private OwnersComboWorker ownersComboWorker;
     private PropertiesComboWorker propertiesComboWorker;
     private ResourceBundle rb = ResourceBundle.getBundle("texts");
-
-    
     
     /**
      * Creates new form TitleDeedCreateForm
@@ -84,10 +82,10 @@ public class TitleDeedCreateForm extends javax.swing.JFrame {
         
 
         if (titleDeed != null) {
-            datePickerStart.getModel().setDate(titleDeed.getStartDate().getYear(), titleDeed.getStartDate().getMonthValue(), titleDeed.getStartDate().getDayOfMonth());
+            datePickerStart.getModel().setDate(titleDeed.getStartDate().getYear(), titleDeed.getStartDate().getMonthValue() - 1, titleDeed.getStartDate().getDayOfMonth());
             datePickerStart.getModel().setSelected(true);
             
-            datePickerEnd.getModel().setDate(titleDeed.getStartDate().getYear(), titleDeed.getStartDate().getMonthValue(), titleDeed.getStartDate().getDayOfMonth());
+            datePickerEnd.getModel().setDate(titleDeed.getStartDate().getYear(), titleDeed.getStartDate().getMonthValue() - 1, titleDeed.getStartDate().getDayOfMonth());
             datePickerEnd.getModel().setSelected(true);
             
             jComboBox1.setSelectedItem(titleDeed.getOwner());
@@ -211,10 +209,10 @@ public class TitleDeedCreateForm extends javax.swing.JFrame {
         protected void done() {
             try {
                 TitleDeed titleDeed = get();
-                System.out.println("BOZEEEEEEEEEE");
                 titleDeedTableModel.updateTitleDeed(titleDeed, rowIndex);
                 log.info("TitleDeed " + titleDeed + " has been updated");
                 context.getJTableTitleDeed().getSelectionModel().clearSelection();
+                context.getTitleDeedUpdateButton().setEnabled(false);
                 TitleDeedCreateForm.this.dispose();
             } catch (IllegalArgumentException ex) {
                 warningMessageBox(ex.getMessage());
@@ -279,8 +277,6 @@ public class TitleDeedCreateForm extends javax.swing.JFrame {
         titleDeed.setStartDate(localDateStart);
         titleDeed.setEndDate(localDateEnd);
         
- 
-
         return titleDeed;
     }
     

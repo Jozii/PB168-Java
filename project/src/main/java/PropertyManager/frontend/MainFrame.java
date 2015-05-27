@@ -89,10 +89,18 @@ public class MainFrame extends javax.swing.JFrame {
     public JTable getJTableTitleDeed() {
         return JTableTitleDeed;
     }
-    
-    
-    
 
+    public javax.swing.JButton getOwnerUpdateButton() {
+        return jButton2;
+    }
+    
+    public javax.swing.JButton getPropertyUpdateButton() {
+        return jButton8;
+    }
+    
+    public javax.swing.JButton getTitleDeedUpdateButton() {
+        return jButton13;
+    }
     public JDatePickerImpl setDatePickerStart() {
         UtilDateModel model = new UtilDateModel();
         model.setDate(1980, 01, 01);
@@ -126,10 +134,10 @@ public class MainFrame extends javax.swing.JFrame {
         fromDatePicker.getModel().setDate(localDate.getYear(), localDate.getMonthValue() - 1,localDate.getDayOfMonth());
         toDatePicker.getModel().setDate(localDate.getYear(), localDate.getMonthValue() - 1,localDate.getDayOfMonth());
         
-        fromDatePicker.setBounds(90, 340, 200, 30);
+        fromDatePicker.setBounds(230, 340, 200, 30);
         fromDatePicker.setVisible(true);
         
-        toDatePicker.setBounds(300, 340, 200, 30);
+        toDatePicker.setBounds(440, 340, 200, 30);
         toDatePicker.setVisible(true);
         
         fromDatePicker.getModel().setSelected(true);
@@ -294,11 +302,12 @@ public class MainFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 int[] indexes = get();
+                log.debug("Deleting owners finished");
                 if (indexes != null && indexes.length != 0) {
                     ownerModel.deleteOwners(indexes);
                 }
             }catch (ExecutionException ex) {
-                JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-owner") + " " + ex.getCause(), null, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-owner") + ": " + ex.getCause().getMessage(), null, JOptionPane.INFORMATION_MESSAGE);
                 log.error("Exception thrown in doInBackground of DeleteOwnerWorker: " + ex.getCause());
             } catch (InterruptedException ex) {
                 log.error("doInBackground of DeleteOwnerWorker interrupted: " + ex.getCause());
@@ -334,11 +343,12 @@ public class MainFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 int[] indexes = get();
+                log.debug("Deleting properties finished");
                 if (indexes != null && indexes.length != 0) {
                     propertyModel.deleteProperties(indexes);
                 }
             } catch (ExecutionException ex) {
-                JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-property") + " " + ex.getCause(), null, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-property") + ": " + ex.getCause().getMessage(), null, JOptionPane.INFORMATION_MESSAGE);
                 log.error("Exception thrown in doInBackground of DeletePropertyWorker: " + ex.getCause());
             } catch (InterruptedException ex) {
                 log.error("doInBackground of DeletePropertyWorker interrupted: " + ex.getCause());
@@ -372,6 +382,7 @@ public class MainFrame extends javax.swing.JFrame {
         protected void done() {
             try {
                 int[] indexes = get();
+                log.debug("Deleting title deeds finished");
                 if (indexes != null && indexes.length != 0) {
                     titleDeedModel.deleteTitleDeeds(indexes);
                 }
@@ -662,6 +673,7 @@ public class MainFrame extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(960, 530));
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        jTabbedPane1.setMinimumSize(new java.awt.Dimension(908, 531));
 
         JTableOwners.setModel(new OwnerTableModel());
         JTableOwners.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -744,7 +756,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 137, Short.MAX_VALUE))
+                .addGap(0, 147, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(bundle.getString("owners"), jPanel1); // NOI18N
@@ -837,7 +849,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton10))
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
 
         jButton8.getAccessibleContext().setAccessibleName("");
@@ -928,18 +940,6 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton11)
-                            .addComponent(jLabel3))
-                        .addGap(190, 190, 190)
-                        .addComponent(jButton12)
-                        .addGap(35, 35, 35)
-                        .addComponent(jButton13)
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton17)
-                            .addComponent(jButton14)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))
                         .addGap(45, 45, 45)
@@ -949,7 +949,20 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(26, 26, 26)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton17))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(jButton11)
+                            .addGap(190, 190, 190)
+                            .addComponent(jButton12)
+                            .addGap(35, 35, 35)
+                            .addComponent(jButton13)
+                            .addGap(35, 35, 35)
+                            .addComponent(jButton14))))
                 .addGap(54, 54, 54))
         );
         jPanel3Layout.setVerticalGroup(
@@ -987,21 +1000,23 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName(bundle.getString("owners")); // NOI18N
 
-        setSize(new java.awt.Dimension(816, 544));
+        setSize(new java.awt.Dimension(902, 544));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jTextField1.setText(null);
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
         findAllOwnersWorker = new FindAllOwnersWorker();
         findAllOwnersWorker.execute();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -1021,7 +1036,7 @@ public class MainFrame extends javax.swing.JFrame {
                 new TitleDeedCreateForm(MainFrame.this, titleDeedModel.getTitleDeed(selectedRow), selectedRow, rb.getString("update")).setVisible(true);
             }
         });
-        jButton2.setEnabled(false);
+        //jButton2.setEnabled(false);
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -1058,7 +1073,7 @@ public class MainFrame extends javax.swing.JFrame {
                 new PropertyCreateForm(MainFrame.this, propertyModel.getProperty(selectedRow), selectedRow, rb.getString("update")).setVisible(true);
             }
         });
-        jButton8.setEnabled(false);
+        //jButton8.setEnabled(false);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
@@ -1085,6 +1100,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jTextField2.setText(null);
+        jButton8.setEnabled(false);
+        jButton9.setEnabled(false);
         findAllPropertiesWorker = new FindAllPropertiesWorker();
         findAllPropertiesWorker.execute();
     }//GEN-LAST:event_jButton6ActionPerformed
@@ -1092,9 +1109,9 @@ public class MainFrame extends javax.swing.JFrame {
     private void JTableOwnersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableOwnersMouseReleased
         if(JTableOwners.getSelectedRowCount() != 1){
             jButton2.setEnabled(false);
-            jButton3.setEnabled(false);
-        }
-        jButton2.setEnabled(true);
+        }else {
+            jButton2.setEnabled(true);
+        }            
         jButton3.setEnabled(true);
     }//GEN-LAST:event_JTableOwnersMouseReleased
 
@@ -1105,16 +1122,16 @@ public class MainFrame extends javax.swing.JFrame {
                 new OwnerCreateForm(MainFrame.this, ownerModel.getOwner(selectedRow), selectedRow, rb.getString("update")).setVisible(true);
             }
         });
-        jButton2.setEnabled(false);
+        //jButton2.setEnabled(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void JTablePropertyMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTablePropertyMouseReleased
         if(JTableProperty.getSelectedRowCount() != 1){
             jButton8.setEnabled(false);
-            jButton9.setEnabled(false);
+        }else {
+            jButton8.setEnabled(true);
         }
         jButton9.setEnabled(true);
-        jButton8.setEnabled(true);
     }//GEN-LAST:event_JTablePropertyMouseReleased
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -1130,9 +1147,9 @@ public class MainFrame extends javax.swing.JFrame {
     private void JTableTitleDeedMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableTitleDeedMouseReleased
         if(JTableTitleDeed.getSelectedRowCount() != 1){
             jButton13.setEnabled(false);
-            jButton14.setEnabled(false);
+        }else {
+            jButton13.setEnabled(true);
         }
-        jButton13.setEnabled(true);
         jButton14.setEnabled(true);
     }//GEN-LAST:event_JTableTitleDeedMouseReleased
 
@@ -1149,9 +1166,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        jButton13.setEnabled(false);
+        jButton14.setEnabled(false);
         findAllTitleDeedsWorker = new FindAllTitleDeedsWorker();
         findAllTitleDeedsWorker.execute();
-        //FindAllTitleDeedsForOwnerWorker
+        
         
     }//GEN-LAST:event_jButton11ActionPerformed
 

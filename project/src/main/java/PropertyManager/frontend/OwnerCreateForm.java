@@ -124,6 +124,7 @@ public class OwnerCreateForm extends javax.swing.JFrame {
                 ownersModel.updateOwner(o, rowIndex);
                 log.info("Owner " + o + " has been updated");
                 context.getJTableOwners().getSelectionModel().clearSelection();
+                context.getOwnerUpdateButton().setEnabled(false);
                 OwnerCreateForm.this.dispose();
             } catch (IllegalArgumentException ex) {
                 warningMessageBox(ex.getMessage());
