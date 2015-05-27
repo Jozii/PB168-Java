@@ -159,6 +159,10 @@ public class PropertyCreateForm extends javax.swing.JFrame {
             return null;
         }
         
+        if (jTextField3 == null || jTextField3.getText().length() == 0) {
+            warningMessageBox(rb.getString("fill-price"));
+            return null;
+        }
         if (!(jTextField3.getText().matches("(\\d)+|((\\d)+.(\\d)+)"))) {
             warningMessageBox(rb.getString("wrong-number-format"));
             return null;
@@ -175,6 +179,10 @@ public class PropertyCreateForm extends javax.swing.JFrame {
             return null;
         }
         
+        if (jTextField5 == null || jTextField5.getText().length() == 0) {
+            warningMessageBox(rb.getString("fill-price"));
+            return null;
+        }
         if (!(jTextField5.getText().matches("(\\d)+"))) {
             warningMessageBox(rb.getString("wrong-number-format"));
             return null;
@@ -185,10 +193,10 @@ public class PropertyCreateForm extends javax.swing.JFrame {
             return null;
         }
         String description = jTextField6.getText();
-        if (description == null || description.length() == 0) {
-            warningMessageBox(rb.getString("fill-description"));
-            return null;
-        }
+//        if (description == null || description.length() == 0) {
+//            warningMessageBox(rb.getString("fill-description"));
+//            return null;
+//        }
         LocalDate localDate;
         try{
             Date date = (Date)datePicker.getModel().getValue();
@@ -377,11 +385,11 @@ public class PropertyCreateForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
         );
 
         setSize(new java.awt.Dimension(446, 454));
