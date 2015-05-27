@@ -59,6 +59,12 @@ public class MainFrame extends javax.swing.JFrame {
     private ResourceBundle rb = ResourceBundle.getBundle("texts");
     private JDatePickerImpl fromDatePicker;
     private JDatePickerImpl toDatePicker;
+    private DefaultComboBoxModel ownersComboBoxModel = new DefaultComboBoxModel();
+    private DefaultComboBoxModel propertiesComboBoxModel = new DefaultComboBoxModel();
+    private OwnersComboWorker ownersComboWorker;
+    private PropertiesComboWorker propertiesComboWorker;
+    private FindAllTitleDeedsForOwnerWorker findAllTitleDeedsForOwnerWorker;
+    private FindAllTitleDeedsForPropertyWorker findAllTitleDeedsForPropertyWorker;
     
     public OwnerTableModel getOwnerModel() {
         return ownerModel;
@@ -314,7 +320,8 @@ public class MainFrame extends javax.swing.JFrame {
                         propertyManager.deleteProperty(property.getId());
                         toDeleteRows.add(selectedRow);
                     }catch (Exception ex) {
-                        log.error("Cannot delete property." + ex);
+                        //log.error("Cannot delete property." + ex);
+                        throw new ServiceFailureException(property.toString());
                         //JOptionPane.showMessageDialog(null, rb.getString("cannot-delete-property"));
                     }
                 }
@@ -331,6 +338,7 @@ public class MainFrame extends javax.swing.JFrame {
                     propertyModel.deleteProperties(indexes);
                 }
             } catch (ExecutionException ex) {
+                JOptionPane.showMessageDialog(rootPane, rb.getString("cannot-delete-property") + " " + ex.getCause(), null, JOptionPane.INFORMATION_MESSAGE);
                 log.error("Exception thrown in doInBackground of DeletePropertyWorker: " + ex.getCause());
             } catch (InterruptedException ex) {
                 log.error("doInBackground of DeletePropertyWorker interrupted: " + ex.getCause());
@@ -403,6 +411,116 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (InterruptedException ex) {
                 log.error("Method doInBackground has been interrupted in FindAllTitleDeedsFromToWorker " + ex.getCause());
                 throw new RuntimeException("Operation interrupted in FindAllTitleDeedsFromToWorker");
+            }
+        }
+    }
+    
+    public class OwnersComboWorker extends SwingWorker<List<Owner>, Integer> {
+
+        @Override
+        protected List<Owner> doInBackground() throws Exception {
+            return ownerManager.findAllOwners();
+        }
+
+        @Override
+        protected void done() {
+            try {
+                List<Owner> owners = get();
+                ownersComboBoxModel.removeAllElements();
+                for (Owner owner : owners) {
+                    ownersComboBoxModel.addElement(owner);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of OwnersComboWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of OwnersComboWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. OwnersComboWorker");
+            }
+        }
+    }
+    
+    public DefaultComboBoxModel getPropertiesCombo() {
+        return propertiesComboBoxModel;
+    }
+
+    public DefaultComboBoxModel getOwnersCombo() {
+        return ownersComboBoxModel;
+    }
+
+    public class PropertiesComboWorker extends SwingWorker<List<Property>, Integer> {
+
+        @Override
+        protected List<Property> doInBackground() throws Exception {
+            return propertyManager.findAllProperties();
+        }
+
+        @Override
+        protected void done() {
+            try {
+                List<Property> properties = get();
+                propertiesComboBoxModel.removeAllElements();
+                for (Property property : properties) {
+                    propertiesComboBoxModel.addElement(property);
+                }
+            } catch (ExecutionException ex) {
+                log.error("Exception thrown in doInBackground of PropertiesComboWorker: " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("doInBackground of PropertiesComboWorker interrupted: " + ex.getCause());
+                throw new RuntimeException("Operation interrupted.. PropertiessComboWorker");
+            }
+        }
+    }
+    
+    private class FindAllTitleDeedsForOwnerWorker extends SwingWorker<List<TitleDeed>, Integer> {
+
+        private Owner owner;
+        
+        public FindAllTitleDeedsForOwnerWorker(Owner owner) {
+            this.owner = owner;
+        }
+        
+        @Override
+        protected List<TitleDeed> doInBackground() throws Exception {
+            return titleDeedManager.findAllTitleDeedForOwner(owner.getId());
+        }
+
+        @Override
+        protected void done() {
+            try{
+                log.debug("Changing titleDeed model - titleDeeds with specified owner loaded from database");
+                titleDeedModel.setTitleDeeds(get());
+            }catch(ExecutionException ex) {
+                log.error("Exception was thrown in FindAllTitleDeedsForOwnerWorker in method doInBackGround with owner " + jTextField1.getText() + "  " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("Method doInBackground has been interrupted in FindAllTitleDeedsForOwnerWorker " + ex.getCause());
+                throw new RuntimeException("Operation interrupted in FindAllTitleDeedsForOwnerWorker");
+            }
+        }
+    }
+    
+    private class FindAllTitleDeedsForPropertyWorker extends SwingWorker<List<TitleDeed>, Integer> {
+
+        private Property property;
+        
+        public FindAllTitleDeedsForPropertyWorker(Property property) {
+            this.property = property;
+        }
+        
+        @Override
+        protected List<TitleDeed> doInBackground() throws Exception {
+            return titleDeedManager.findAllTitleDeedForProperty(property.getId());
+        }
+
+        @Override
+        protected void done() {
+            try{
+                log.debug("Changing titleDeed model - titleDeeds with specified property loaded from database");
+                titleDeedModel.setTitleDeeds(get());
+            }catch(ExecutionException ex) {
+                log.error("Exception was thrown in FindAllTitleDeedsForPropertyWorker in method doInBackGround with owner " + jTextField1.getText() + "  " + ex.getCause());
+            } catch (InterruptedException ex) {
+                log.error("Method doInBackground has been interrupted in FindAllTitleDeedsForPropertyWorker " + ex.getCause());
+                throw new RuntimeException("Operation interrupted in FindAllTitleDeedsForPropertyWorker");
             }
         }
     }
@@ -481,6 +599,13 @@ public class MainFrame extends javax.swing.JFrame {
         findAllTitleDeedsWorker = new FindAllTitleDeedsWorker();
         findAllTitleDeedsWorker.execute();
         
+        jComboBox1.setModel(getOwnersCombo());
+        ownersComboWorker = new OwnersComboWorker();
+        ownersComboWorker.execute();
+        jComboBox2.setModel(getPropertiesCombo());
+        propertiesComboWorker = new PropertiesComboWorker();
+        propertiesComboWorker.execute();
+        
         initDatePickers();
         
     }
@@ -526,6 +651,9 @@ public class MainFrame extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("texts"); // NOI18N
@@ -764,10 +892,31 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel4.setText("Show");
+        jLabel4.setText(bundle.getString("show-titledeed-for-owner")); // NOI18N
+
+        jLabel5.setText(bundle.getString("show-titledeed-for-property")); // NOI18N
+
+        jButton5.setText(bundle.getString("Show")); // NOI18N
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton15.setText(bundle.getString("Show")); // NOI18N
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -789,13 +938,19 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton17)
                             .addComponent(jButton14)))
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(82, 82, 82)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(54, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jComboBox1, 0, 218, Short.MAX_VALUE)
+                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(54, 54, 54))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -811,13 +966,19 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jButton17))
-                .addGap(43, 43, 43)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
+                            .addComponent(jButton15)))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton5)))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(bundle.getString("title-deeds"), jPanel3); // NOI18N
@@ -990,8 +1151,27 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         findAllTitleDeedsWorker = new FindAllTitleDeedsWorker();
         findAllTitleDeedsWorker.execute();
+        //FindAllTitleDeedsForOwnerWorker
         
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        Owner owner = (Owner)jComboBox1.getSelectedItem();
+        findAllTitleDeedsForOwnerWorker = new FindAllTitleDeedsForOwnerWorker(owner);
+        findAllTitleDeedsForOwnerWorker.execute();
+        //FindAllTitleDeedsForOwnerWorker
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        Property property = (Property)jComboBox2.getSelectedItem();
+        findAllTitleDeedsForPropertyWorker = new FindAllTitleDeedsForPropertyWorker(property);
+        findAllTitleDeedsForPropertyWorker.execute();
+//FindAllTitleDeedsForPropertyWorker
+    }//GEN-LAST:event_jButton15ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1039,10 +1219,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
@@ -1053,6 +1235,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
