@@ -7,3 +7,4 @@ project/release.properties
 project/nb-configuration.xml
 project/derby.log
 project/propertyd/
+project/nbactions.xml
